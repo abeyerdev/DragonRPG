@@ -12,11 +12,17 @@ public class CameraRaycaster : MonoBehaviour
 
     Camera viewCamera;
 
-    RaycastHit m_hit;
-    public RaycastHit hit { get { return m_hit; } }
+    RaycastHit rayCastHit;
+    public RaycastHit Hit { get { return rayCastHit; } }
 
-    Layer m_layerHit;
-    public Layer layerHit { get { return m_layerHit; } }
+    Layer prevLayerHit;
+    Layer layerHit;
+    public Layer LayerHit { get { return layerHit; } }
+
+    public bool NewLayerHit()
+    {
+        return prevLayerHit != layerHit;
+    }
 
     void Start()
     {
@@ -31,15 +37,16 @@ public class CameraRaycaster : MonoBehaviour
             var hit = RaycastForLayer(layer);
             if (hit.HasValue)
             {
-                m_hit = hit.Value;
-                m_layerHit = layer;
+                prevLayerHit = layerHit;
+                rayCastHit = hit.Value;
+                layerHit = layer;
                 return;
             }
         }
 
         // Otherwise return background hit
-        m_hit.distance = distanceToBackground;
-        m_layerHit = Layer.RaycastEndStop;
+        rayCastHit.distance = distanceToBackground;
+        layerHit = Layer.RaycastEndStop;
     }
 
     RaycastHit? RaycastForLayer(Layer layer)
