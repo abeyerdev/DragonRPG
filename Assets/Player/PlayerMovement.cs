@@ -58,17 +58,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            print("Cursor raycast hit " + cameraRaycaster.LayerHit);
             switch (cameraRaycaster.LayerHit)
             {
                 case Layer.Walkable:
                     currentClickTarget = cameraRaycaster.Hit.point;
                     break;
                 case Layer.Enemy:
-                    print("Not going to move to the enemy just yet");
                     break;
                 default:
-                    print("Probably hit the end stop");
                     break;
             }
         }

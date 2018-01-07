@@ -11,7 +11,6 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        print(player.ToString());
     }
 
     // Called after other updates thus object positions should be finalized.
