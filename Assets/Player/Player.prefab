@@ -942,6 +942,7 @@ GameObject:
   - component: {fileID: 114590006907371322}
   - component: {fileID: 114332715238561008}
   - component: {fileID: 114966127331601442}
+  - component: {fileID: 114240375766894212}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2486,6 +2487,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114240375766894212
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1699229803113460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3f1eeb124f5c84e825a826b30eb080, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 100
 --- !u!114 &114332715238561008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2527,6 +2540,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71b9736a8c7204c43b84a1b820389daa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meleeAttackMoveStopRadius: 0.8
+  rangedAttackMoveStopRadius: 8
   walkMoveStopRadius: 0.2
 --- !u!136 &136518895580775112
 CapsuleCollider:
