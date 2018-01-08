@@ -6,11 +6,15 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
+    float meleeAttackMoveStopRadius = .5f;
+    [SerializeField]
+    float rangedAttackMoveStopRadius = 5f;
+    [SerializeField]
     float walkMoveStopRadius = .2f;
 
     ThirdPersonCharacter thirdPersonCharacter;   // A reference to the ThirdPersonCharacter on the object
     CameraRaycaster cameraRaycaster;
-    Vector3 currentClickTarget;
+    Vector3 currentDestination, clickPoint;
 
     bool isInDirectMode; // TODO consider making static later
 
@@ -56,24 +60,32 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessMouseMovement()
     {
+        // Get mouse movement and shorten it based on target before processing player move
         if (Input.GetMouseButton(0))
         {
+            clickPoint = cameraRaycaster.Hit.point;
             switch (cameraRaycaster.LayerHit)
             {
                 case Layer.Walkable:
-                    currentClickTarget = cameraRaycaster.Hit.point;
+                    currentDestination = ShortDestination(clickPoint, walkMoveStopRadius);
                     break;
                 case Layer.Enemy:
+                    currentDestination = ShortDestination(clickPoint, meleeAttackMoveStopRadius);
                     break;
                 default:
                     break;
             }
         }
 
-        var playerToClickPoint = currentClickTarget - transform.position;
-        if (playerToClickPoint.magnitude >= walkMoveStopRadius)
+        MoveToDestination();
+    }
+
+    private void MoveToDestination()
+    {
+        Vector3 distFromPlayerToClickPoint = currentDestination - transform.position;
+        if (distFromPlayerToClickPoint.magnitude >= 0)
         {
-            thirdPersonCharacter.Move(currentClickTarget - transform.position, false, false);
+            thirdPersonCharacter.Move(currentDestination - transform.position, false, false);
         }
         else
         {
@@ -83,7 +95,34 @@ public class PlayerMovement : MonoBehaviour
 
     private void ResetClickTargetToCurrentPosition()
     {
-        currentClickTarget = transform.position;
+        currentDestination = transform.position;
+    }
+
+    /// <summary>
+    /// Helper method that shortens a destination Vector3 by the given shortening factor.
+    /// </summary>
+    Vector3 ShortDestination(Vector3 destination, float shortening)
+    {
+        Vector3 reduction = (destination - transform.position).normalized * shortening;
+        return destination - reduction;
+    }
+
+    // Called when Gizmos are drawn
+    private void OnDrawGizmos()
+    {
+        // Draw gizmo movement
+        Gizmos.color = Color.black;
+        Gizmos.DrawLine(transform.position, clickPoint);
+        Gizmos.DrawSphere(currentDestination, .1f);
+        Gizmos.DrawSphere(clickPoint, .15f);
+
+        // Draw melee attack sphere
+        Gizmos.color = new Color(255f, 0f, 0, .5f);
+        Gizmos.DrawWireSphere(transform.position, meleeAttackMoveStopRadius);
+
+        // Draw ranged attack sphere
+        Gizmos.color = new Color(255f, 0f, 120, .5f);
+        Gizmos.DrawWireSphere(transform.position, rangedAttackMoveStopRadius);
     }
 }
 
